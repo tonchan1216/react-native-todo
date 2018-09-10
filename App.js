@@ -1,9 +1,9 @@
 import React from 'react';
 import {
-  StyleSheet, 
-  Text, 
-  View, 
-  StatusBar, 
+  StyleSheet,
+  Text,
+  View,
+  StatusBar,
   Platform,
   ScrollView,
   FlatList,
@@ -11,9 +11,12 @@ import {
   Button,
   AsyncStorage,
   KeyboardAvoidingView,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 
+import {
+  SearchBar
+} from "react-native-elements";
 
 const STATUSBAR_HEIGHT = Platform.OS == 'ios' ? 20 : StatusBar.currentHeight;
 const TODO = "@todoapp.todo"
@@ -33,7 +36,7 @@ const TodoItem = (props) => {
 }
 
 export default class App extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       todo: [],
@@ -43,7 +46,7 @@ export default class App extends React.Component {
     }
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.loadTodo()
   }
 
@@ -54,7 +57,7 @@ export default class App extends React.Component {
       if (todoString) {
         const todo = JSON.parse(todoString)
         const currentIndex = todo.length
-        this.setState({todo: todo, currentIndex: currentIndex})
+        this.setState({ todo: todo, currentIndex: currentIndex })
       }
     } catch (e) {
       console.log(e)
@@ -66,7 +69,7 @@ export default class App extends React.Component {
     try {
       const todoString = JSON.stringify(todo)
       await AsyncStorage.setItem(TODO, todoString)　//非同期処理
-    } catch(e){
+    } catch (e) {
       console.log(e)
     }
   }
@@ -79,7 +82,7 @@ export default class App extends React.Component {
     }
 
     const index = this.state.currentIndex + 1
-    const newTodo = {index: index, title: title, done: false}
+    const newTodo = { index: index, title: title, done: false }
     const todo = [...this.state.todo, newTodo]
 
     this.setState({
@@ -98,7 +101,7 @@ export default class App extends React.Component {
 
     todoItem.done = !todoItem.done //done値を反転
     todo[index] = todoItem
-    this.setState({todo: todo})
+    this.setState({ todo: todo })
 
     this.saveTodo(todo)
   }
@@ -109,25 +112,25 @@ export default class App extends React.Component {
 
     //フィルター処理
     if (filterText !== "") {
-      todo = todo.filter( t => t.title.includes(filterText) )
+      todo = todo.filter(t => t.title.includes(filterText))
     }
 
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding">
-        <View  style={styles.filter}>
-          <TextInput 
-            onChangeText={(text) => this.setState({filterText: text})}
+        <View style={styles.filter}>
+          <TextInput
+            onChangeText={(text) => this.setState({ filterText: text })}
             value={this.state.filterText}
             style={styles.inputText}
             placeholder="Type filter text"
           />
         </View>
 
-        <ScrollView  style={styles.todolist}>
+        <ScrollView style={styles.todolist}>
           <FlatList data={todo}
             extraData={this.state}
-            renderItem={({item}) => 
-              <TodoItem 
+            renderItem={({ item }) =>
+              <TodoItem
                 title={item.title}
                 done={item.done}
                 onTapTodoItem={() => this.onTapTodoItem(item)}
@@ -137,19 +140,19 @@ export default class App extends React.Component {
           />
         </ScrollView>
 
-        <View  style={styles.input}>
-            <TextInput
-              onChangeText={ (text) => this.setState({inputText: text}) }
-              value={this.state.inputText}
-              style={styles.inputText}
-              placeholder="Type new Todo Item"
-            />
-            <Button 
-              onPress={this.onAddItem}
-              title="Add"
-              color="#841584"
-              style={styles.inputButton}
-            />
+        <View style={styles.input}>
+          <TextInput
+            onChangeText={(text) => this.setState({ inputText: text })}
+            value={this.state.inputText}
+            style={styles.inputText}
+            placeholder="Type new Todo Item"
+          />
+          <Button
+            onPress={this.onAddItem}
+            title="Add"
+            color="#841584"
+            style={styles.inputButton}
+          />
         </View>
       </KeyboardAvoidingView>
     );
