@@ -115,17 +115,18 @@ export default class App extends React.Component {
       todo = todo.filter(t => t.title.includes(filterText))
     }
 
+    const platform = Platform.OS == 'ios' ? 'ios' : 'android'
+
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding">
-        <View style={styles.filter}>
-          <TextInput
-            onChangeText={(text) => this.setState({ filterText: text })}
-            value={this.state.filterText}
-            style={styles.inputText}
-            placeholder="Type filter text"
-          />
-        </View>
-
+        <SearchBar
+          platform={platform}
+          cancelButtonTitle="Cancel"
+          onChangeText={(text) => this.setState({ filterText: text })}
+          onClear={() => this.setState({ filterText: "" })}
+          value={this.state.filterText}
+          placeholder="Type filter text"
+        />
         <ScrollView style={styles.todolist}>
           <FlatList data={todo}
             extraData={this.state}
