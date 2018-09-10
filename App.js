@@ -1,36 +1,45 @@
 import React from 'react';
 import {
   StyleSheet,
-  Text,
   View,
   StatusBar,
   Platform,
   ScrollView,
   FlatList,
-  TextInput,
-  Button,
   AsyncStorage,
   KeyboardAvoidingView,
   TouchableOpacity,
 } from 'react-native';
 
 import {
-  SearchBar
+  SearchBar,
+  Input,
+  Button,
+  ListItem
 } from "react-native-elements";
 
-const STATUSBAR_HEIGHT = Platform.OS == 'ios' ? 20 : StatusBar.currentHeight;
+import Icon from "react-native-vector-icons/Feather";
+import Icon2 from "react-native-vector-icons/MaterialIcons";
+
+import { ifIphoneX, getStatusBarHeight } from 'react-native-iphone-x-helper'
+
+const STATUSBAR_HEIGHT = getStatusBarHeight()
 const TODO = "@todoapp.todo"
 
 //Todoアイテムのコンポーネント
 const TodoItem = (props) => {
-  let textStyle = styles.todoItem
+  let icon = null
   if (props.done === true) {
-    textStyle = styles.todoItemDone
+    icon = <Icon2 name="done" />
   }
 
   return (
     <TouchableOpacity onPress={props.onTapTodoItem}>
-      <Text style={textStyle}>{props.title}</Text>
+      <ListItem
+        title={props.title}
+        rightIcon={icon}
+        bottomDivider
+      />
     </TouchableOpacity>
   )
 }
@@ -142,17 +151,23 @@ export default class App extends React.Component {
         </ScrollView>
 
         <View style={styles.input}>
-          <TextInput
+          <Input
             onChangeText={(text) => this.setState({ inputText: text })}
             value={this.state.inputText}
-            style={styles.inputText}
+            containerStyle={styles.inputText}
             placeholder="Type new Todo Item"
           />
           <Button
+            icon={
+              <Icon
+                name='plus'
+                size={30}
+                color='white'
+              />
+            }
             onPress={this.onAddItem}
-            title="Add"
-            color="#841584"
-            style={styles.inputButton}
+            title=""
+            buttonStyle={styles.inputButton}
           />
         </View>
       </KeyboardAvoidingView>
@@ -175,18 +190,28 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   input: {
-    height: 30,
-    flexDirection: "row"
+    ...ifIphoneX({
+      height: 80,
+      paddingBottom: 30
+    }, {
+        height: 50
+      }),
+    height: 70,
+    flexDirection: "row",
+    paddingRight: 10,
   },
   inputText: {
     flex: 1,
-    borderBottomWidth: 1,
-    borderTopWidth: 1,
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
+    paddingLeft: 1,
+    paddingRight: 1,
   },
   inputButton: {
-    width: 100
+    width: 48,
+    height: 48,
+    borderWidth: 0,
+    borderColor: 'transparent',
+    borderRadius: 48,
+    backgroundColor: '#ff6347'
   },
   todoItem: {
     fontSize: 20,
