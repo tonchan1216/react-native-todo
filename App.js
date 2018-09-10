@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   StyleSheet,
-  Text,
   View,
   StatusBar,
   Platform,
@@ -22,7 +21,9 @@ import {
 import Icon from "react-native-vector-icons/Feather";
 import Icon2 from "react-native-vector-icons/MaterialIcons";
 
-const STATUSBAR_HEIGHT = Platform.OS == 'ios' ? 20 : StatusBar.currentHeight;
+import { ifIphoneX, getStatusBarHeight } from 'react-native-iphone-x-helper'
+
+const STATUSBAR_HEIGHT = getStatusBarHeight()
 const TODO = "@todoapp.todo"
 
 //Todoアイテムのコンポーネント
@@ -189,7 +190,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   input: {
-    height: 50,
+    ...ifIphoneX({
+      height: 80,
+      paddingBottom: 30
+    }, {
+        height: 50
+      }),
+    height: 70,
     flexDirection: "row",
     paddingRight: 10,
   },
